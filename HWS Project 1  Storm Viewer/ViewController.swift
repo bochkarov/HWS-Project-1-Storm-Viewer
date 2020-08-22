@@ -11,9 +11,13 @@ import UIKit
 class ViewController: UITableViewController {
     
     var pictures = [String]()
+    var sortedPictures = [String]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.prefersLargeTitles = true
+
+        title = "Storm Viewer"
         let fm = FileManager.default
         let path = Bundle.main.resourcePath!
         let items = try! fm.contentsOfDirectory(atPath: path)
@@ -29,14 +33,22 @@ class ViewController: UITableViewController {
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Picture", for: indexPath)
+        
+//        sortedPictures = pictures.sorted { $0.localizedCaseInsensitiveCompare($1) == ComparisonResult.orderedAscending }
+        
+
+//        cell.textLabel?.text = sortedPictures[indexPath.row]
+        pictures.sort()
         cell.textLabel?.text = pictures[indexPath.row]
+
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         if let vc = storyboard?.instantiateViewController(withIdentifier: "Detail") as? DetailViewController {
-            vc.selectedImage = pictures[indexPath.row]
+            vc.selectedImage = sortedPictures[indexPath.row]
+            vc.title = "Picture \(indexPath.row + 1) of \(pictures.count)"
             navigationController?.pushViewController(vc, animated: true)
         }
     }
