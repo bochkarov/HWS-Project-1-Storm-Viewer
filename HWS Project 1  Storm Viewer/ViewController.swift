@@ -16,6 +16,7 @@ class ViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareAppTapped))
 
         title = "Storm Viewer"
         let fm = FileManager.default
@@ -47,10 +48,18 @@ class ViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         if let vc = storyboard?.instantiateViewController(withIdentifier: "Detail") as? DetailViewController {
-            vc.selectedImage = sortedPictures[indexPath.row]
+            vc.selectedImage = pictures[indexPath.row]
             vc.title = "Picture \(indexPath.row + 1) of \(pictures.count)"
             navigationController?.pushViewController(vc, animated: true)
         }
+    }
+    
+    @objc func shareAppTapped() {
+        let sharedLink = "Try it! google.com"
+        let vc = UIActivityViewController(activityItems: [sharedLink], applicationActivities: [])
+        vc.popoverPresentationController?.barButtonItem
+            = navigationItem.rightBarButtonItem
+        present(vc, animated: true)
     }
 
 
